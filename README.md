@@ -147,14 +147,20 @@ An optional `status` or `statuses` argument will be passed when authentication f
 ```js
 fastify.get(
   '/',
-  { preValidation: fastifyPassport.authenticate('test', { authInfo: false }) },
-  async (request, reply, err, user, info, status) => {
-    if (err !== null) {
-      console.warn(err)
-    } else if (user) {
-      console.log(`Hello ${user.name}!`)
-    }
-  }
+  { 
+     preValidation: fastifyPassport.authenticate(
+        'test', 
+        { authInfo: false },
+        async (request, reply, err, user, info, status) => {
+           if (err !== null) {
+              console.warn(err)
+           } else if (user) {
+             console.log(`Hello ${user.name}!`)
+           }
+        }
+     ) 
+  },
+  () => {}
 )
 ```
 
@@ -189,14 +195,20 @@ fastifyPassport.use('google', new FancyGoogleStrategy())
 // and then an `authenticate` call can test incoming requests against multiple strategies
 fastify.get(
   '/',
-  { preValidation: fastifyPassport.authenticate(['bearer', 'basic', 'google'], { authInfo: false }) },
-  async (request, reply, err, user, info, status) => {
-    if (err !== null) {
-      console.warn(err)
-    } else if (user) {
-      console.log(`Hello ${user.name}!`)
-    }
-  }
+  { 
+     preValidation: fastifyPassport.authenticate(
+        ['bearer', 'basic', 'google'], 
+        { authInfo: false },
+        async (request, reply, err, user, info, status) => {
+           if (err !== null) {
+              console.warn(err)
+           } else if (user) {
+              console.log(`Hello ${user.name}!`)
+           }
+        }
+     ) 
+  },
+  () => {}
 )
 ```
 
@@ -209,17 +221,21 @@ Multiple strategies can also be passed as instances if you only intend to use th
 fastify.get(
   '/',
   {
-    preValidation: fastifyPassport.authenticate([new BearerTokenStrategy(), new BasicAuthStrategy()], {
-      authInfo: false,
-    }),
+    preValidation: fastifyPassport.authenticate(
+       [new BearerTokenStrategy(), new BasicAuthStrategy()], 
+       {
+          authInfo: false,
+       },
+       async (request, reply, err, user, info, status) => {
+          if (err !== null) {
+             console.warn(err)
+          } else if (user) {
+             console.log(`Hello ${user.name}!`)
+          }
+       }
+    ),
   },
-  async (request, reply, err, user, info, status) => {
-    if (err !== null) {
-      console.warn(err)
-    } else if (user) {
-      console.log(`Hello ${user.name}!`)
-    }
-  }
+  () => {}
 )
 ```
 
